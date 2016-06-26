@@ -2,7 +2,7 @@
 
 var path = process.cwd();
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
-
+var timestamp = require('./timestamp');
 module.exports = function (app, passport) {
 
 	function isLoggedIn (req, res, next) {
@@ -54,4 +54,10 @@ module.exports = function (app, passport) {
 		.get(isLoggedIn, clickHandler.getClicks)
 		.post(isLoggedIn, clickHandler.addClick)
 		.delete(isLoggedIn, clickHandler.resetClicks);
+	
+	app.route('/:str')
+	.get(function(req, res) {
+		timestamp.select(req.params.str, res, timestamp.response());
+		res.end(JSON.stringify(timestamp.response()));
+	});
 };
